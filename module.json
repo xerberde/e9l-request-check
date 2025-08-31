@@ -30,9 +30,8 @@
     "name": "Deutsch",
     "path": "lang/de.json"
   }],
-  "url": "https://github.com/yourusername/e9l-request-probe",
-  "manifest": "https://raw.githubusercontent.com/yourusername/e9l-request-probe/main/module.json",
-  "download": "https://github.com/yourusername/e9l-request-probe/releases/latest/download/module.zip",
-  "bugs": "https://github.com/yourusername/e9l-request-probe/issues",
-  "changelog": "https://github.com/yourusername/e9l-request-probe/releases"
+  "url": "https://github.com/xerberde/e9l-request-probe",
+  "manifest": "https://raw.githubusercontent.com/xerberde/e9l-request-probe/main/module.json",
+  "download": "https://github.com/xerberde/e9l-request-probe/releases/latest/download/module.zip",
+  "bugs": "https://github.com/xerberde/e9l-request-probe/issues"
 }
