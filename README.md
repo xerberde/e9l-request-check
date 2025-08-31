@@ -26,7 +26,7 @@ A Foundry VTT module for DSA5 (The Dark Eye 5th Edition) that streamlines skill 
 ## Usage
 
 1. Click the person icon (🧑‍🎓) in the scene controls (GM only)
-2. Select skills and set modifiers as needed
+2. Select skills and set modifiers as needed (you can use mouse wheel to change the numbers for each talent)
 3. Click the dice icon to send skill check requests to chat
 4. Players can see the requested checks with modifiers in the chat
 
