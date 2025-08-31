@@ -1,0 +1,48 @@
+{
+  "E9L": {
+    "title": "E9L Request Probe",
+    "settings": {
+      "skillConfiguration": {
+        "name": "Fähigkeiten Konfiguration",
+        "label": "Konfigurieren",
+        "hint": "Wähle aus, welche Fähigkeiten in der UI angezeigt werden sollen"
+      },
+      "skillVisibility": {
+        "name": "Fähigkeiten Sichtbarkeit",
+        "hint": "Welche Fähigkeiten sollen in der UI angezeigt werden"
+      },
+      "skillModifiers": {
+        "name": "Fähigkeiten Modifikatoren",
+        "hint": "Gespeicherte Modifikatoren für Fähigkeiten"
+      }
+    },
+    "ui": {
+      "toggleButton": "E9L Request Probe öffnen/schließen",
+      "requestProbe": "Probe anfordern",
+      "selectAll": "Alle auswählen",
+      "selectNone": "Keine auswählen",
+      "save": "Speichern",
+      "visible": "Sichtbar",
+      "skill": "Fähigkeit",
+      "modifier": "Modifikator",
+      "skillsTab": "Talente",
+      "configTab": "Einstellungen"
+    },
+    "chat": {
+      "requestTitle": "Probe angefordert",
+      "requestText": "Bitte würfelt eine Probe auf:",
+      "multipleRequestTitle": "Mehrere Proben angefordert"
+    },
+    "errors": {
+      "systemNotSupported": "E9L Request Probe: Nur für DSA5 System",
+      "noSkillsFound": "Keine Fähigkeiten gefunden",
+      "invalidInput": "Ungültige Eingabe",
+      "sendError": "Fehler beim Senden der Anfrage"
+    },
+    "info": {
+      "loading": "Lade Fähigkeiten...",
+      "skillsLoaded": "{count} Fähigkeiten geladen",
+      "noSkillsSelected": "Keine Fähigkeiten ausgewählt"
+    }
+  }
+}

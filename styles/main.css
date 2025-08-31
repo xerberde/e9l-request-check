@@ -1,0 +1,27 @@
+/* E9L Request Probe - Main Styles */
+
+.e9l-skill-request {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #ff6400;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.e9l-skill-request h3 {
+  color: #ff6400;
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+  border-bottom: 1px solid #ff640066;
+  padding-bottom: 5px;
+}
+
+.e9l-skill-request p {
+  margin: 5px 0;
+  color: #f0f0f0;
+}
+
+.e9l-skill-request strong {
+  color: #ffd700;
+  font-size: 1.1em;
+}

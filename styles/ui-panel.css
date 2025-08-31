@@ -1,0 +1,321 @@
+/* E9L Request Probe - UI Panel Styles */
+
+/* Scene Control Button */
+.e9l-control-button {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.e9l-control-button:hover {
+    color: #a0a0a0;
+}
+
+/* Main Panel */
+.e9l-ui-panel {
+    position: fixed;
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    min-width: 50px;
+    z-index: 100;
+}
+
+.e9l-ui-panel .window-content {
+    background: #000;
+    padding: 0;
+    overflow: visible;
+}
+
+/* Container */
+.e9l-ui-container {
+    display: block;
+    background: #000;
+}
+
+/* Skill Panel */
+.e9l-skill-panel {
+    background: #000;
+    border: none;
+    padding: 0;
+    min-width: 280px;
+    overflow: hidden;
+}
+
+/* Tabs */
+.e9l-panel-tabs {
+    display: flex;
+    border-bottom: 1px solid #333;
+    background: #000;
+}
+
+.e9l-panel-tabs .e9l-tab-button {
+    flex: 1;
+    padding: 10px 8px;
+    background: transparent;
+    border: none;
+    border-right: 1px solid #333;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    text-align: center;
+}
+
+.e9l-panel-tabs .e9l-tab-button i {
+    font-size: 18px;
+    margin-right: 4px;
+}
+
+.e9l-panel-tabs .e9l-tab-button span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.e9l-panel-tabs .e9l-tab-button:last-child {
+    border-right: none;
+}
+
+.e9l-panel-tabs .e9l-tab-button:hover:not(.active) {
+    color: #fff;
+    background: rgba(160, 160, 160, 0.05);
+}
+
+.e9l-panel-tabs .e9l-tab-button.active {
+    background: rgba(160, 160, 160, 0.1);
+    color: #a0a0a0;
+    border-bottom: 2px solid #a0a0a0;
+    margin-bottom: -1px;
+}
+
+/* Config Section */
+.e9l-config-section {
+    display: block;
+    padding: 0;
+    overflow-y: auto;
+    border-top: none;
+}
+
+.e9l-config-section h3 {
+    margin: 0;
+    padding: 8px;
+    color: #a0a0a0;
+    font-size: 13px;
+    border-bottom: 1px solid #333;
+    background: rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.e9l-config-list {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Config Skill Items */
+label.e9l-config-skill-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin: 0;
+}
+
+label.e9l-config-skill-item:hover {
+    background: rgba(160, 160, 160, 0.1);
+    padding-left: 12px;
+}
+
+/* Custom Icon Checkboxes */
+label.e9l-config-skill-item .skill-visibility-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: #999;
+    font-size: 16px;
+    transition: color 0.15s ease;
+}
+
+label.e9l-config-skill-item .skill-visibility-icon.fa-square-check {
+    color: #a0a0a0;
+}
+
+label.e9l-config-skill-item:hover .skill-visibility-icon {
+    color: #fff;
+}
+
+label.e9l-config-skill-item:hover .skill-visibility-icon.fa-square-check {
+    color: #c0c0c0;
+}
+
+label.e9l-config-skill-item span {
+    color: #ccc;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Skill List - Performance optimized */
+.e9l-skill-list {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    /* Performance optimization */
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
+}
+
+.e9l-skill-item {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-bottom: 1px solid #222;
+    min-height: 32px;
+    transition: background-color 0.15s ease;
+}
+
+.e9l-skill-item:hover {
+    background: rgba(160, 160, 160, 0.05);
+}
+
+/* Skill Name */
+.e9l-skill-item .skill-name {
+    flex: 1;
+    padding: 0 8px;
+    color: #ccc;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 140px;
+}
+
+/* Modifier Value Field */
+.e9l-skill-item .modifier-value {
+    width: 36px;
+    height: 28px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #333;
+    border-radius: 2px;
+    color: #a0a0a0;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: ns-resize;
+    user-select: none;
+    margin: 0 4px;
+    transition: all 0.15s ease;
+    line-height: 26px;
+}
+
+.e9l-skill-item .modifier-value:hover,
+.e9l-skill-item .modifier-value:focus {
+    border-color: #a0a0a0;
+    box-shadow: 0 0 5px rgba(160, 160, 160, 0.3);
+    outline: none;
+}
+
+/* Request Button */
+.e9l-skill-item .request-btn {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    font-size: 20px;
+    padding: 0;
+}
+
+.e9l-skill-item .request-btn:hover {
+    color: #a0a0a0;
+    background: rgba(160, 160, 160, 0.1);
+    border-radius: 4px;
+}
+
+.e9l-skill-item .request-btn:active {
+    transform: scale(0.95);
+}
+
+.e9l-skill-item .request-btn i {
+    font-size: 20px;
+}
+
+/* No Skills Message */
+.e9l-no-skills {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+}
+
+.e9l-no-skills i {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.e9l-no-skills p {
+    margin: 0;
+    font-size: 12px;
+}
+
+/* Scrollbar Styling */
+.e9l-skill-list::-webkit-scrollbar,
+.e9l-config-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.e9l-skill-list::-webkit-scrollbar-track,
+.e9l-config-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+}
+
+.e9l-skill-list::-webkit-scrollbar-thumb,
+.e9l-config-list::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 3px;
+    transition: background 0.2s ease;
+}
+
+.e9l-skill-list::-webkit-scrollbar-thumb:hover,
+.e9l-config-list::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
+/* Accessibility */
+.e9l-skill-item:focus-within {
+    outline: 1px solid #a0a0a0;
+    outline-offset: -1px;
+}
+
+/* Performance: Disable animations for large lists */
+@media (prefers-reduced-motion: reduce) {
+    .e9l-skill-item,
+    .e9l-config-skill-item,
+    .e9l-tab-button,
+    .e9l-modifier-value,
+    .e9l-request-btn {
+        transition: none;
+    }
+}

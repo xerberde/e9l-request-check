@@ -1,0 +1,73 @@
+<!-- E9L Request Probe UI Panel -->
+<div class="e9l-ui-container">
+    <div class="e9l-skill-panel">
+        <div class="e9l-panel-tabs">
+            <button class="e9l-tab-button {{#unless showConfig}}active{{/unless}}" 
+                    data-tab="skills"
+                    title="{{localize 'E9L.ui.skillsTab'}}">
+                <i class="fa-light fa-dice-d20"></i> <span>Talente</span>
+            </button>
+            <button class="e9l-tab-button {{#if showConfig}}active{{/if}}" 
+                    data-tab="config"
+                    title="{{localize 'E9L.ui.configTab'}}">
+                <i class="fa-solid fa-cog"></i> <span>Einstellungen</span>
+            </button>
+        </div>
+        
+        {{#if showConfig}}
+        <div class="e9l-config-section" style="display: block;">
+        {{else}}
+        <div class="e9l-config-section" style="display: none;">
+        {{/if}}
+            <div class="e9l-config-list">
+                {{#each allSkills}}
+                <label class="e9l-config-skill-item" title="{{this.name}}">
+                    <i class="skill-visibility-icon {{#if this.visible}}fa-light fa-square-check{{else}}fa-light fa-square{{/if}}"
+                       data-skill-id="{{this.id}}"
+                       aria-label="{{this.name}} sichtbar"></i>
+                    <span>{{this.name}}</span>
+                </label>
+                {{else}}
+                <div class="e9l-no-skills">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>{{localize "E9L.errors.noSkillsFound"}}</p>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        {{#if showConfig}}
+        <div class="e9l-skill-list" style="display: none;">
+        {{else}}
+        <div class="e9l-skill-list" style="display: block;">
+        {{/if}}
+            {{#each skills}}
+            <div class="e9l-skill-item" data-skill-id="{{this.id}}">
+                <span class="skill-name" title="{{this.name}}">{{this.name}}</span>
+                
+                <input type="text" 
+                       class="modifier-value" 
+                       data-skill-id="{{this.id}}"
+                       value="{{#if (eq this.modifier 0)}}0{{else}}{{#if (gt this.modifier 0)}}+{{this.modifier}}{{else}}{{this.modifier}}{{/if}}{{/if}}"
+                       readonly
+                       tabindex="0"
+                       aria-label="{{localize 'E9L.ui.modifier'}} für {{this.name}}"
+                       title="{{localize 'E9L.ui.modifier'}}: Mausrad oder Pfeiltasten">
+                
+                <button class="request-btn" 
+                        data-skill-id="{{this.id}}" 
+                        data-skill-name="{{this.name}}"
+                        title="{{localize 'E9L.ui.requestProbe'}}: {{this.name}}"
+                        aria-label="{{localize 'E9L.ui.requestProbe'}} für {{this.name}}">
+                    <i class="fa-light fa-dice-d20"></i>
+                </button>
+            </div>
+            {{else}}
+            <div class="e9l-no-skills">
+                <i class="fas fa-info-circle"></i>
+                <p>{{localize "E9L.info.noSkillsSelected"}}</p>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
