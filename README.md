@@ -38,6 +38,9 @@ A Foundry VTT module for DSA5 (The Dark Eye 5th Edition) that streamlines skill 
 
 The module automatically loads skills from the DSA5 system configuration and provides fallback support for standard DSA5 talents if system skills cannot be loaded.
 
-## License
+## Images
+![Talent Tab](img/1a6b5778499945bbb3beb0838b7d5c35.webp)
 
-MIT
+![Settings Tab](img/07de6aad0e934484a85cd223d43c8546.webp)
+
+![FoundryVTT Request Talent Check](img/214a50ff8af14e24b0fd17c9552b16af.webp)
