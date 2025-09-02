@@ -1,4 +1,4 @@
-# EDSA5 e9l Request Probe
+# DSA5 e9l Request Probe
 
 A Foundry VTT module for DSA5 (The Dark Eye 5th Edition) that streamlines skill check requests for Game Masters.
 
@@ -38,7 +38,11 @@ A Foundry VTT module for DSA5 (The Dark Eye 5th Edition) that streamlines skill 
 
 The module automatically loads skills from the DSA5 system configuration and provides fallback support for standard DSA5 talents if system skills cannot be loaded.
 
-## Images
+## Demo Video
+[![Thub Demo Video](img/1f63cec1a0484cebbfab8125123b5b2d.webp)](https://youtu.be/SB9UTCkNp18)
+
+## UI Images
+
 ![Talent Tab](img/1a6b5778499945bbb3beb0838b7d5c35.webp)
 
 ![Settings Tab](img/07de6aad0e934484a85cd223d43c8546.webp)
