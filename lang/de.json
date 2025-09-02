@@ -1,6 +1,6 @@
 {
   "E9L": {
-    "title": "e9l DSA5 Request Probe",
+    "title": "e9l DSA5 Request Check",
     "settings": {
       "skillConfiguration": {
         "name": "Fähigkeiten Konfiguration",
@@ -47,4 +47,5 @@
   }
 
 }
+
 
