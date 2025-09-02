@@ -20,7 +20,7 @@ A Foundry VTT module for DSA5 / TDE5 that streamlines skill check requests for G
 
 1. In Foundry VTT, navigate to **Add-on Modules**
 2. Click **Install Module**
-3. Paste the manifest URL: `https://raw.githubusercontent.com/xerberde/e9l-request-probe/main/module.json`
+3. Paste the manifest URL: `https://raw.githubusercontent.com/xerberde/e9l-request-check/main/module.json`
 4. Click **Install**
 
 ## Usage
