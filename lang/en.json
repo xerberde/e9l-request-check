@@ -1,6 +1,6 @@
 {
   "E9L": {
-    "title": "E9L Request Check",
+    "title": "e9l DSA5 Request Check",
     "settings": {
       "skillConfiguration": {
         "name": "Skills Configuration",
@@ -17,7 +17,7 @@
       }
     },
     "ui": {
-      "toggleButton": "Open/close E9L Request Check",
+      "toggleButton": "Open/close Request Check",
       "requestProbe": "Request check",
       "selectAll": "Select all",
       "selectNone": "Select none",
@@ -34,7 +34,7 @@
       "multipleRequestTitle": "Multiple checks requested"
     },
     "errors": {
-      "systemNotSupported": "E9L Request Check: Only for DSA5 System",
+      "systemNotSupported": "Request Check: Only for DSA5 System",
       "noSkillsFound": "No skills found",
       "invalidInput": "Invalid input",
       "sendError": "Error sending request"
@@ -45,4 +45,5 @@
       "noSkillsSelected": "No skills selected"
     }
   }
+
 }
