@@ -1,11 +1,11 @@
-{
-  "id": "e9l-request-probe",
-  "title": "e9l DSA5 Request Probe",
+k{
+  "id": "e9l-request-check",
+  "title": "e9l DSA5 Request Check",
   "description": "A module for DSA5 for quick requesting of skill checks",
   "version": "1.0.2",
   "compatibility": {
     "minimum": "12",
-    "verified": "12"
+    "verified": "13"
   },
   "authors": [{
     "name": "e9l",
@@ -36,9 +36,10 @@
       "path": "lang/en.json"
     }
   ],
-  "url": "https://github.com/xerberde/e9l-request-probe",
-  "manifest": "https://raw.githubusercontent.com/xerberde/e9l-request-probe/main/module.json",
-  "download": "https://github.com/xerberde/e9l-request-probe/archive/refs/heads/main.zip",
-  "bugs": "https://github.com/xerberde/e9l-request-probe/issues"
+  "url": "https://github.com/xerberde/e9l-request-check",
+  "manifest": "https://raw.githubusercontent.com/xerberde/e9l-request-check/main/module.json",
+  "download": "https://github.com/xerberde/e9l-request-check/archive/refs/heads/main.zip",
+  "bugs": "https://github.com/xerberde/e9l-request-check/issues"
 }
+
 
