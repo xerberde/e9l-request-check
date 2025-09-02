@@ -1,16 +1,15 @@
 {
   "id": "e9l-request-probe",
-  "title": "E9L Request Probe",
-  "description": "Ein Modul für DSA5 zur schnellen Anforderung von Fähigkeitsproben",
-  "version": "1.0.1",
+  "title": "DSA5 E9L Request Probe",
+  "description": "A module for DSA5 for quick requesting of skill checks",
+  "version": "1.0.2",
   "compatibility": {
     "minimum": "12",
     "verified": "12"
   },
   "authors": [{
-    "name": "E9L",
-    "email": "",
-    "discord": ""
+    "name": "e9l",
+    "discord": "xerberde"
   }],
   "relationships": {
     "systems": [{
@@ -25,13 +24,20 @@
   "styles": [
     "styles/ui-panel.css"
   ],
-  "languages": [{
-    "lang": "de",
-    "name": "Deutsch",
-    "path": "lang/de.json"
-  }],
+  "languages": [
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
   "url": "https://github.com/xerberde/e9l-request-probe",
   "manifest": "https://raw.githubusercontent.com/xerberde/e9l-request-probe/main/module.json",
-  "download": "https://github.com/xerberde/e9l-request-probe/releases/latest/download/module.zip",
+  "download": "https://github.com/xerberde/e9l-request-probe/archive/refs/heads/main.zip",
   "bugs": "https://github.com/xerberde/e9l-request-probe/issues"
 }
