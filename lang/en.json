@@ -1,0 +1,48 @@
+{
+  "E9L": {
+    "title": "E9L Request Check",
+    "settings": {
+      "skillConfiguration": {
+        "name": "Skills Configuration",
+        "label": "Configure",
+        "hint": "Choose which skills should be displayed in the UI"
+      },
+      "skillVisibility": {
+        "name": "Skills Visibility",
+        "hint": "Which skills should be displayed in the UI"
+      },
+      "skillModifiers": {
+        "name": "Skills Modifiers",
+        "hint": "Saved modifiers for skills"
+      }
+    },
+    "ui": {
+      "toggleButton": "Open/close E9L Request Check",
+      "requestProbe": "Request check",
+      "selectAll": "Select all",
+      "selectNone": "Select none",
+      "save": "Save",
+      "visible": "Visible",
+      "skill": "Skill",
+      "modifier": "Modifier",
+      "skillsTab": "Skills",
+      "configTab": "Settings"
+    },
+    "chat": {
+      "requestTitle": "Check requested",
+      "requestText": "Please roll a check for:",
+      "multipleRequestTitle": "Multiple checks requested"
+    },
+    "errors": {
+      "systemNotSupported": "E9L Request Check: Only for DSA5 System",
+      "noSkillsFound": "No skills found",
+      "invalidInput": "Invalid input",
+      "sendError": "Error sending request"
+    },
+    "info": {
+      "loading": "Loading skills...",
+      "skillsLoaded": "{count} skills loaded",
+      "noSkillsSelected": "No skills selected"
+    }
+  }
+}
