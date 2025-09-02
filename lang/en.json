@@ -1,6 +1,6 @@
 {
   "E9L": {
-    "title": "e9l DSA5 Request Check",
+    "title": "e9l TDE5 Request Check",
     "settings": {
       "skillConfiguration": {
         "name": "Skills Configuration",
@@ -47,3 +47,4 @@
   }
 
 }
+
