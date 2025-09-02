@@ -1,6 +1,6 @@
 {
   "E9L": {
-    "title": "E9L Request Probe",
+    "title": "e9l DSA5 Request Probe",
     "settings": {
       "skillConfiguration": {
         "name": "Fähigkeiten Konfiguration",
@@ -17,7 +17,7 @@
       }
     },
     "ui": {
-      "toggleButton": "E9L Request Probe öffnen/schließen",
+      "toggleButton": "e9l DSA5 Request Probe öffnen/schließen",
       "requestProbe": "Probe anfordern",
       "selectAll": "Alle auswählen",
       "selectNone": "Keine auswählen",
@@ -45,4 +45,5 @@
       "noSkillsSelected": "Keine Fähigkeiten ausgewählt"
     }
   }
+
 }
