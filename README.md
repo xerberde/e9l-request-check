@@ -1,6 +1,6 @@
-# DSA5 e9l Request Probe
+# e9l DSA5 / TDE5 Request Check
 
-A Foundry VTT module for DSA5 (The Dark Eye 5th Edition) that streamlines skill check requests for Game Masters.
+A Foundry VTT module for DSA5 / TDE5 that streamlines skill check requests for Game Masters.
 
 ## Features
 
