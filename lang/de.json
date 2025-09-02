@@ -17,7 +17,7 @@
       }
     },
     "ui": {
-      "toggleButton": "e9l DSA5 Request Probe öffnen/schließen",
+      "toggleButton": "Request Probe öffnen/schließen",
       "requestProbe": "Probe anfordern",
       "selectAll": "Alle auswählen",
       "selectNone": "Keine auswählen",
@@ -34,7 +34,7 @@
       "multipleRequestTitle": "Mehrere Proben angefordert"
     },
     "errors": {
-      "systemNotSupported": "E9L Request Probe: Nur für DSA5 System",
+      "systemNotSupported": "Request Probe: Nur für DSA5 System",
       "noSkillsFound": "Keine Fähigkeiten gefunden",
       "invalidInput": "Ungültige Eingabe",
       "sendError": "Fehler beim Senden der Anfrage"
@@ -47,3 +47,4 @@
   }
 
 }
+
