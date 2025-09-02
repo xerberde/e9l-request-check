@@ -1,6 +1,6 @@
 {
   "id": "e9l-request-probe",
-  "title": "DSA5 E9L Request Probe",
+  "title": "e9l DSA5 Request Probe",
   "description": "A module for DSA5 for quick requesting of skill checks",
   "version": "1.0.2",
   "compatibility": {
@@ -41,3 +41,4 @@
   "download": "https://github.com/xerberde/e9l-request-probe/archive/refs/heads/main.zip",
   "bugs": "https://github.com/xerberde/e9l-request-probe/issues"
 }
+
