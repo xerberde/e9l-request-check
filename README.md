@@ -41,9 +41,6 @@ The module automatically loads skills from the DSA5 system configuration and pro
 ## Demo Video
 https://github.com/user-attachments/assets/e7ed8ca1-dd6a-4bbb-b1eb-c8fdc970c94a
 
-
-[![Thub Demo Video](img/1f63cec1a0484cebbfab8125123b5b2d.webp)](https://youtu.be/SB9UTCkNp18)
-
 ## UI Images
 
 ![Talent Tab](img/1a6b5778499945bbb3beb0838b7d5c35.webp)
