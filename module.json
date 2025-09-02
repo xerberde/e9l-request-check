@@ -1,4 +1,4 @@
-k{
+{
   "id": "e9l-request-check",
   "title": "e9l DSA5 Request Check",
   "description": "A module for DSA5 for quick requesting of skill checks",
@@ -41,5 +41,6 @@ k{
   "download": "https://github.com/xerberde/e9l-request-check/archive/refs/heads/main.zip",
   "bugs": "https://github.com/xerberde/e9l-request-check/issues"
 }
+
 
 
