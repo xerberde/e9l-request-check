@@ -1,4 +1,4 @@
-/* E9L Request Probe - UI Panel Styles */
+/* E9L Request Check - UI Panel Styles */
 
 /* Scene Control Button */
 .e9l-control-button {
@@ -14,7 +14,7 @@
     color: #a0a0a0;
 }
 
-/* Main Panel */
+/* Main Panel - Window-Header entfernt */
 .e9l-ui-panel {
     position: fixed;
     background: #000;
@@ -25,10 +25,16 @@
     z-index: 100;
 }
 
+/* Verstecke Window-Header falls Foundry ihn doch rendert */
+.e9l-ui-panel .window-header {
+    display: none !important;
+}
+
 .e9l-ui-panel .window-content {
     background: #000;
     padding: 0;
     overflow: visible;
+    border-radius: 3px; /* Da kein Header */
 }
 
 /* Container */
@@ -46,33 +52,38 @@
     overflow: hidden;
 }
 
-/* Tabs */
+/* Tabs - Reduzierte Höhe */
 .e9l-panel-tabs {
     display: flex;
     border-bottom: 1px solid #333;
     background: #000;
+    height: 40px; /* Reduziert von 50px */
 }
 
 .e9l-panel-tabs .e9l-tab-button {
     flex: 1;
-    padding: 10px 8px;
+    padding: 8px 6px; /* Reduziert */
     background: transparent;
     border: none;
     border-right: 1px solid #333;
     color: #999;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 14px;
+    font-size: 13px; /* Etwas kleiner */
     text-align: center;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .e9l-panel-tabs .e9l-tab-button i {
-    font-size: 18px;
+    font-size: 16px; /* Reduziert */
     margin-right: 4px;
 }
 
 .e9l-panel-tabs .e9l-tab-button span {
-    font-size: 14px;
+    font-size: 13px; /* Reduziert */
     font-weight: 500;
 }
 
@@ -119,20 +130,21 @@
     padding: 0;
 }
 
-/* Config Skill Items */
+/* Config Skill Items - Gleiche Höhe wie Skill Items */
 label.e9l-config-skill-item {
     display: flex;
     align-items: center;
-    padding: 6px 10px;
+    padding: 6px 8px; /* Gleiche Padding wie Skill Items */
     border-bottom: 1px solid #222;
     cursor: pointer;
     transition: all 0.15s ease;
     margin: 0;
+    min-height: 36px; /* Gleiche Höhe wie Skill Items */
 }
 
 label.e9l-config-skill-item:hover {
     background: rgba(160, 160, 160, 0.1);
-    padding-left: 12px;
+    padding-left: 10px;
 }
 
 /* Custom Icon Checkboxes */
@@ -167,7 +179,7 @@ label.e9l-config-skill-item span {
     white-space: nowrap;
 }
 
-/* Skill List - Performance optimized */
+/* Skill List */
 .e9l-skill-list {
     display: block;
     list-style-type: none;
@@ -175,18 +187,17 @@ label.e9l-config-skill-item span {
     padding: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    
-    /* Performance optimization */
     will-change: scroll-position;
     -webkit-overflow-scrolling: touch;
 }
 
+/* Skill Items - Einheitliche Höhe mit Config Items */
 .e9l-skill-item {
     display: flex;
     align-items: center;
-    padding: 4px;
+    padding: 4px 8px; /* Angepasst */
     border-bottom: 1px solid #222;
-    min-height: 32px;
+    min-height: 36px; /* Einheitliche Höhe */
     transition: background-color 0.15s ease;
 }
 
@@ -194,34 +205,34 @@ label.e9l-config-skill-item span {
     background: rgba(160, 160, 160, 0.05);
 }
 
-/* Skill Name */
+/* Skill Name - Gleiche Schriftgröße */
 .e9l-skill-item .skill-name {
     flex: 1;
     padding: 0 8px;
     color: #ccc;
-    font-size: 14px;
+    font-size: 14px; /* Gleich wie Config Items */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 140px;
 }
 
-/* Modifier Value Field */
+/* Modifier Value Field - Angepasste Größe */
 .e9l-skill-item .modifier-value {
-    width: 36px;
-    height: 28px;
+    width: 34px; /* Etwas kleiner */
+    height: 26px; /* Etwas kleiner */
     text-align: center;
     background: rgba(0, 0, 0, 0.5);
     border: 1px solid #333;
     border-radius: 2px;
     color: #a0a0a0;
-    font-size: 16px;
+    font-size: 14px; /* Kleiner */
     font-weight: bold;
     cursor: ns-resize;
     user-select: none;
     margin: 0 4px;
     transition: all 0.15s ease;
-    line-height: 26px;
+    line-height: 24px;
 }
 
 .e9l-skill-item .modifier-value:hover,
@@ -231,10 +242,10 @@ label.e9l-config-skill-item span {
     outline: none;
 }
 
-/* Request Button */
+/* Request Button - Angepasste Größe */
 .e9l-skill-item .request-btn {
-    width: 32px;
-    height: 32px;
+    width: 28px; /* Kleiner */
+    height: 28px; /* Kleiner */
     background: transparent;
     border: none;
     color: #999;
@@ -243,7 +254,7 @@ label.e9l-config-skill-item span {
     align-items: center;
     justify-content: center;
     transition: all 0.15s ease;
-    font-size: 20px;
+    font-size: 18px; /* Kleiner */
     padding: 0;
 }
 
@@ -258,7 +269,7 @@ label.e9l-config-skill-item span {
 }
 
 .e9l-skill-item .request-btn i {
-    font-size: 20px;
+    font-size: 18px; /* Kleiner */
 }
 
 /* No Skills Message */
@@ -281,25 +292,29 @@ label.e9l-config-skill-item span {
 
 /* Scrollbar Styling */
 .e9l-skill-list::-webkit-scrollbar,
-.e9l-config-list::-webkit-scrollbar {
+.e9l-config-list::-webkit-scrollbar,
+.e9l-config-section::-webkit-scrollbar {
     width: 6px;
 }
 
 .e9l-skill-list::-webkit-scrollbar-track,
-.e9l-config-list::-webkit-scrollbar-track {
+.e9l-config-list::-webkit-scrollbar-track,
+.e9l-config-section::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.5);
     border-radius: 3px;
 }
 
 .e9l-skill-list::-webkit-scrollbar-thumb,
-.e9l-config-list::-webkit-scrollbar-thumb {
+.e9l-config-list::-webkit-scrollbar-thumb,
+.e9l-config-section::-webkit-scrollbar-thumb {
     background: #666;
     border-radius: 3px;
     transition: background 0.2s ease;
 }
 
 .e9l-skill-list::-webkit-scrollbar-thumb:hover,
-.e9l-config-list::-webkit-scrollbar-thumb:hover {
+.e9l-config-list::-webkit-scrollbar-thumb:hover,
+.e9l-config-section::-webkit-scrollbar-thumb:hover {
     background: #a0a0a0;
 }
 

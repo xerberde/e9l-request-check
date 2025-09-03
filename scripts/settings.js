@@ -1,9 +1,9 @@
 /**
- * Settings Manager für E9L Request Probe
+ * Settings Manager für E9L Request Check
  * @class
  */
 export class E9LSettings {
-    static ID = 'e9l-request-probe';
+    static ID = 'e9l-request-check'; // KORRIGIERT: Muss mit module.json übereinstimmen!
     
     static SETTINGS = {
         SKILL_VISIBILITY: 'skillVisibility',
@@ -19,22 +19,27 @@ export class E9LSettings {
     static registerSettings() {
         console.log('E9L Settings: Registrierung');
         
-        // Debug Mode
+        // Debug Mode - MUSS ZUERST registriert werden
         game.settings.register(this.ID, this.SETTINGS.DEBUG_MODE, {
             name: 'Debug Modus',
             hint: 'Aktiviert erweiterte Konsolen-Ausgaben für Debugging',
             scope: 'world',
             config: true,
             type: Boolean,
-            default: false,
+            default: false, // Standardmäßig AUS
             onChange: value => {
                 // Update Debug flags in allen Modulen
-                if (window.E9LRequestProbe) window.E9LRequestProbe.DEBUG = value;
-                const modules = ['E9LSkillManager', 'E9LChatHandler'];
-                modules.forEach(mod => {
-                    const module = game.modules.get(this.ID)?.api?.[mod.toLowerCase()];
-                    if (module) module.DEBUG = value;
-                });
+                if (window.E9LRequestCheck) {
+                    window.E9LRequestCheck.DEBUG = value;
+                    console.log('E9L: Debug-Modus ' + (value ? 'aktiviert' : 'deaktiviert'));
+                }
+                
+                // Update in anderen Modulen
+                const api = game.modules.get(this.ID)?.api;
+                if (api) {
+                    if (api.skillManager) api.skillManager.DEBUG = value;
+                    if (api.chatHandler) api.chatHandler.DEBUG = value;
+                }
             }
         });
         
@@ -84,7 +89,12 @@ export class E9LSettings {
      * @returns {Object} Visibility-Objekt
      */
     static getSkillVisibility() {
-        return game.settings.get(this.ID, this.SETTINGS.SKILL_VISIBILITY) || {};
+        try {
+            return game.settings.get(this.ID, this.SETTINGS.SKILL_VISIBILITY) || {};
+        } catch (e) {
+            // Falls Settings noch nicht registriert
+            return {};
+        }
     }
     
     /**
@@ -93,7 +103,11 @@ export class E9LSettings {
      * @returns {Promise}
      */
     static async setSkillVisibility(visibility) {
-        return game.settings.set(this.ID, this.SETTINGS.SKILL_VISIBILITY, visibility);
+        try {
+            return await game.settings.set(this.ID, this.SETTINGS.SKILL_VISIBILITY, visibility);
+        } catch (error) {
+            console.error('E9L Settings: Fehler beim Speichern der Sichtbarkeit', error);
+        }
     }
     
     /**
@@ -101,7 +115,12 @@ export class E9LSettings {
      * @returns {Object} Modifikatoren-Objekt
      */
     static getSkillModifiers() {
-        return game.settings.get(this.ID, this.SETTINGS.SKILL_MODIFIERS) || {};
+        try {
+            return game.settings.get(this.ID, this.SETTINGS.SKILL_MODIFIERS) || {};
+        } catch (e) {
+            // Falls Settings noch nicht registriert
+            return {};
+        }
     }
     
     /**
@@ -110,7 +129,11 @@ export class E9LSettings {
      * @returns {Promise}
      */
     static async setSkillModifiers(modifiers) {
-        return game.settings.set(this.ID, this.SETTINGS.SKILL_MODIFIERS, modifiers);
+        try {
+            return await game.settings.set(this.ID, this.SETTINGS.SKILL_MODIFIERS, modifiers);
+        } catch (error) {
+            console.error('E9L Settings: Fehler beim Speichern der Modifikatoren', error);
+        }
     }
     
     /**
@@ -118,7 +141,11 @@ export class E9LSettings {
      * @returns {boolean}
      */
     static isDebugMode() {
-        return game.settings.get(this.ID, this.SETTINGS.DEBUG_MODE) || false;
+        try {
+            return game.settings.get(this.ID, this.SETTINGS.DEBUG_MODE) === true;
+        } catch (e) {
+            return false; // Standardmäßig aus
+        }
     }
     
     /**
@@ -126,7 +153,11 @@ export class E9LSettings {
      * @returns {boolean}
      */
     static isAudioEnabled() {
-        return game.settings.get(this.ID, this.SETTINGS.ENABLE_AUDIO) !== false;
+        try {
+            return game.settings.get(this.ID, this.SETTINGS.ENABLE_AUDIO) !== false;
+        } catch (e) {
+            return true; // Standardmäßig an
+        }
     }
     
     /**
@@ -134,7 +165,11 @@ export class E9LSettings {
      * @returns {boolean}
      */
     static getDefaultVisibility() {
-        return game.settings.get(this.ID, this.SETTINGS.DEFAULT_VISIBLE) !== false;
+        try {
+            return game.settings.get(this.ID, this.SETTINGS.DEFAULT_VISIBLE) !== false;
+        } catch (e) {
+            return true; // Standardmäßig sichtbar
+        }
     }
     
     /**
@@ -159,12 +194,12 @@ export class E9LSettings {
      */
     static exportSettings() {
         return {
-            version: game.modules.get(this.ID).version,
+            version: game.modules.get(this.ID)?.version || '1.0.0',
             visibility: this.getSkillVisibility(),
             modifiers: this.getSkillModifiers(),
             debugMode: this.isDebugMode(),
-            enableAudio: this.isAudioEnabled(),
-            defaultVisible: this.getDefaultVisibility()
+            defaultVisible: this.getDefaultVisibility(),
+            exportDate: new Date().toISOString()
         };
     }
     
@@ -175,12 +210,30 @@ export class E9LSettings {
      */
     static async importSettings(data) {
         try {
-            if (data.visibility) {
-                await this.setSkillVisibility(data.visibility);
+            // Version prüfen
+            const currentVersion = game.modules.get(this.ID)?.version || '1.0.0';
+            if (data.version && data.version !== currentVersion) {
+                ui.notifications.warn(`Settings von Version ${data.version} importiert, aktuelle Version ist ${currentVersion}`);
             }
-            if (data.modifiers) {
-                await this.setSkillModifiers(data.modifiers);
+            
+            // Settings importieren
+            const promises = [];
+            
+            if (data.visibility !== undefined) {
+                promises.push(this.setSkillVisibility(data.visibility));
             }
+            if (data.modifiers !== undefined) {
+                promises.push(this.setSkillModifiers(data.modifiers));
+            }
+            if (data.debugMode !== undefined) {
+                promises.push(game.settings.set(this.ID, this.SETTINGS.DEBUG_MODE, data.debugMode));
+            }
+            if (data.defaultVisible !== undefined) {
+                promises.push(game.settings.set(this.ID, this.SETTINGS.DEFAULT_VISIBLE, data.defaultVisible));
+            }
+            
+            await Promise.all(promises);
+            
             ui.notifications.info('Settings erfolgreich importiert');
             return true;
         } catch (error) {

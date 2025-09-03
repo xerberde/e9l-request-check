@@ -1,18 +1,19 @@
-/* E9L Request Probe - Main Styles */
+/* E9L Request Check - Main Styles */
 
+/* Chat Nachricht Styles - OHNE rote Umrandung */
 .e9l-skill-request {
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid #ff6400;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #666; /* Neutrale graue Umrandung */
   border-radius: 4px;
   padding: 10px;
   margin: 5px 0;
 }
 
 .e9l-skill-request h3 {
-  color: #ff6400;
+  color: #a0a0a0; /* Neutrale Farbe statt orange */
   margin: 0 0 10px 0;
   font-size: 1.2em;
-  border-bottom: 1px solid #ff640066;
+  border-bottom: 1px solid #666;
   padding-bottom: 5px;
 }
 
@@ -21,7 +22,35 @@
   color: #f0f0f0;
 }
 
-.e9l-skill-request strong {
+.e9l-skill-request .dice-formula {
   color: #ffd700;
+  font-weight: bold;
   font-size: 1.1em;
+  margin: 8px 0;
+  padding: 5px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.e9l-skill-request ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 10px 0;
+}
+
+.e9l-skill-request ul li {
+  padding: 3px 0;
+}
+
+/* Override Foundry's default error styles falls vorhanden */
+.chat-message .e9l-skill-request {
+  border-color: #666 !important; /* Force graue Border */
+}
+
+/* Entferne rote Hintergrundfarbe falls von Foundry gesetzt */
+.chat-message.error .e9l-skill-request,
+.chat-message[data-message-type="error"] .e9l-skill-request {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-color: #666 !important;
 }

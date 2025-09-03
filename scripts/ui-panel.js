@@ -3,7 +3,7 @@ import { E9LSkillManager } from './skill-manager.js';
 import { E9LChatHandler } from './chat-handler.js';
 
 /**
- * UI Panel für E9L Request Probe
+ * UI Panel für E9L Request Check
  * @class
  */
 export class E9LUIPanel extends Application {
@@ -13,49 +13,138 @@ export class E9LUIPanel extends Application {
         this.modifiers = E9LSettings.getSkillModifiers();
         this.visibility = E9LSettings.getSkillVisibility();
         this.showConfig = false;
+        this.buttonRect = null;
         this._wheelHandlers = new WeakMap();
         this._keyHandlers = new WeakMap();
+        this._updateTimer = null;
+        this._clickOutsideHandler = null;
     }
     
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: 'e9l-ui-panel',
-            title: 'E9L Request Probe',
-            template: 'modules/e9l-request-probe/templates/ui-panel.html',
-            popOut: false,
-            resizable: false,
+            title: '', // Kein Titel
+            template: 'modules/e9l-request-check/templates/ui-panel.html',
             classes: ['e9l-ui-panel'],
             width: 280,
-            height: 'auto'
+            height: 'auto',
+            popOut: true,
+            minimizable: false,
+            resizable: false,
+            dragDrop: [],
+            tabs: []
         });
     }
     
     /**
-     * Render the Application
+     * Override _renderOuter um Titel-Leiste zu entfernen
      */
-    async _render(force, options) {
-        await super._render(force, options);
+    async _renderOuter() {
+        const html = await super._renderOuter();
         
-        // Log für Debug
-        console.log('E9L Panel: _render aufgerufen, element:', this.element?.[0]);
+        // Entferne Window-Header komplett
+        html.find('.window-header').remove();
         
-        // Stelle sicher dass Panel sichtbar ist
+        // Entferne Resize-Handle
+        html.find('.window-resizable-handle').remove();
+        
+        return html;
+    }
+    
+    /**
+     * Positioniere das Panel relativ zum Button
+     */
+    positionPanel() {
+        if (!this.element || !this.element.length) {
+            return; // Kein Warning mehr, da das beim ersten Render normal ist
+        }
+        
+        if (this.buttonRect) {
+            const rect = this.buttonRect;
+            const panelWidth = 280;
+            const maxHeight = Math.min(window.innerHeight * 0.8, 800);
+            const offset = 10;
+            
+            let left = rect.right + offset;
+            let top = rect.top - 20;
+            
+            // Prüfen ob Panel aus dem Fenster ragt
+            if (left + panelWidth > window.innerWidth) {
+                left = rect.left - panelWidth - offset;
+            }
+            
+            if (top + maxHeight > window.innerHeight) {
+                top = Math.max(10, window.innerHeight - maxHeight - 10);
+            }
+            
+            // Position setzen
+            this.setPosition({ left, top, height: 'auto', width: 280 });
+        }
+        
+        // Stelle Sichtbarkeit sicher
         if (this.element) {
+            this.element.show();
             this.element.css({
                 'display': 'block',
-                'visibility': 'visible'
+                'visibility': 'visible',
+                'opacity': '1'
             });
-            
-            // Füge zum Body hinzu falls nicht vorhanden
-            if (!this.element.parent().length) {
-                $('body').append(this.element);
-            }
         }
     }
     
     /**
+     * Override render
+     */
+    async _render(force = false, options = {}) {
+        await super._render(force, options);
+        
+        // Positioniere nach dem Rendern - IMMER ganz oben
+        setTimeout(() => {
+            this.positionPanel();
+            // Extra Sicherheit - force top position
+            if (this.element && this.element.length) {
+                this.element.css({
+                    'position': 'fixed',
+                    'top': '0px',
+                    'z-index': '100'
+                });
+            }
+        }, 0);
+        
+        // Setup Click-Outside Handler
+        this._setupClickOutsideHandler();
+        
+        return this;
+    }
+    
+    /**
+     * Setup Handler für Klicks außerhalb des Panels
+     */
+    _setupClickOutsideHandler() {
+        // Entferne alten Handler falls vorhanden
+        if (this._clickOutsideHandler) {
+            document.removeEventListener('click', this._clickOutsideHandler);
+        }
+        
+        // Erstelle neuen Handler mit kleiner Verzögerung
+        setTimeout(() => {
+            this._clickOutsideHandler = (event) => {
+                // Prüfe ob Klick außerhalb des Panels und nicht auf dem Toggle-Button
+                const panel = this.element?.[0];
+                const button = document.querySelector('.e9l-control-button');
+                
+                if (panel && !panel.contains(event.target) && 
+                    button && !button.contains(event.target)) {
+                    this.close();
+                }
+            };
+            
+            document.addEventListener('click', this._clickOutsideHandler);
+        }, 100); // Kleine Verzögerung damit der aktuelle Klick nicht erfasst wird
+    }
+    
+    /**
      * Bereitet Daten für das Template vor
-     * @returns {Promise<Object>} Template-Daten
      */
     async getData() {
         const allSkills = await E9LSkillManager.getAllSkills();
@@ -81,18 +170,16 @@ export class E9LUIPanel extends Application {
     
     /**
      * Aktiviert Event Listener
-     * @param {jQuery} html - jQuery HTML Element
      */
     activateListeners(html) {
         super.activateListeners(html);
         
-        // Tab Switching - ohne komplettes Re-render
+        // Tab Switching
         html.find('.e9l-tab-button').click((e) => {
             e.preventDefault();
             e.stopPropagation();
             const tab = e.currentTarget.dataset.tab;
             
-            // Nur Tab-Inhalt wechseln, kein komplettes Re-render
             if (tab === 'config' && !this.showConfig) {
                 this.showConfig = true;
                 html.find('.e9l-tab-button').removeClass('active');
@@ -108,7 +195,7 @@ export class E9LUIPanel extends Application {
             }
         });
         
-        // Skill Visibility Icons (Custom Icons statt Checkboxen)
+        // Skill Visibility Icons
         html.find('.skill-visibility-icon').click(async (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -116,7 +203,6 @@ export class E9LUIPanel extends Application {
             const isCurrentlyVisible = $(e.currentTarget).hasClass('fa-square-check');
             const visible = !isCurrentlyVisible;
             
-            // Icon-Klassen aktualisieren
             if (visible) {
                 $(e.currentTarget).removeClass('fa-square').addClass('fa-square-check');
             } else {
@@ -126,43 +212,10 @@ export class E9LUIPanel extends Application {
             this.visibility[skillId] = visible;
             await E9LSettings.setSkillVisibility(this.visibility);
             
-            // Nur die Skill-Liste aktualisieren, nicht das gesamte Panel
-            const skillsData = await E9LSkillManager.getVisibleSkills();
-            skillsData.forEach(skill => {
-                skill.modifier = this.modifiers[skill.id] || 0;
-            });
-            
-            // Skill-Liste neu rendern
-            if (skillsData.length > 0) {
-                let skillsHtml = '';
-                skillsData.forEach(skill => {
-                    const modText = skill.modifier >= 0 ? `+${skill.modifier}` : skill.modifier;
-                    skillsHtml += `
-                        <div class="e9l-skill-item" data-skill-id="${skill.id}">
-                            <span class="skill-name" title="${skill.name}">${skill.name}</span>
-                            <input type="text" 
-                                   class="modifier-value" 
-                                   data-skill-id="${skill.id}"
-                                   value="${skill.modifier === 0 ? '0' : modText}"
-                                   readonly
-                                   tabindex="0">
-                            <button class="request-btn" 
-                                    data-skill-id="${skill.id}" 
-                                    data-skill-name="${skill.name}">
-                                <i class="fa-light fa-dice-d20"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-                html.find('.e9l-skill-list').html(skillsHtml);
-                
-                // Event Listener für neue Elemente aktivieren
-                this._attachModifierListeners(html);
-                this._attachRequestListeners(html);
-            }
+            await this._updateSkillList(html);
         });
         
-        // Click auf Skill-Item zum Icon-Toggle  
+        // Config-Item Klick
         html.find('.e9l-config-skill-item').click((e) => {
             if (!$(e.target).hasClass('skill-visibility-icon')) {
                 e.preventDefault();
@@ -172,50 +225,101 @@ export class E9LUIPanel extends Application {
             }
         });
         
-        // Modifier Controls mit Memory Leak Prevention
+        // Modifier und Request Listeners
         this._attachModifierListeners(html);
-        
-        // Request Buttons
         this._attachRequestListeners(html);
         
-        // Position festlegen
-        this._setPosition();
+        // Listen-Höhe für genau 20 Einträge
+        // Talente-Liste braucht etwas mehr Platz wegen der Buttons
+        // Bei 36px pro Eintrag + 1px Border = 37px pro Eintrag
+        // 20 × 37px = 740px
+        const maxListHeight = 740; // 20 Einträge mit Borders
+        
+        html.find('.e9l-skill-list').css({
+            'max-height': `${maxListHeight}px`,
+            'overflow-y': 'auto'
+        });
+        
+        // Config-Section kann bei 720px bleiben
+        html.find('.e9l-config-section').css({
+            'max-height': '720px',
+            'overflow-y': 'auto'
+        });
     }
     
     /**
-     * Fügt Modifier-Listener hinzu (mit Cleanup)
-     * @private
-     * @param {jQuery} html - jQuery HTML Element
+     * Aktualisiert nur die Skill-Liste
+     */
+    async _updateSkillList(html) {
+        const skillsData = await E9LSkillManager.getVisibleSkills();
+        skillsData.forEach(skill => {
+            skill.modifier = this.modifiers[skill.id] || 0;
+        });
+        
+        if (skillsData.length > 0) {
+            let skillsHtml = '';
+            skillsData.forEach(skill => {
+                const modText = skill.modifier >= 0 ? `+${skill.modifier}` : skill.modifier;
+                skillsHtml += `
+                    <div class="e9l-skill-item" data-skill-id="${skill.id}">
+                        <span class="skill-name" title="${skill.name}">${skill.name}</span>
+                        <input type="text" 
+                               class="modifier-value" 
+                               data-skill-id="${skill.id}"
+                               value="${skill.modifier === 0 ? '0' : modText}"
+                               readonly
+                               tabindex="0">
+                        <button class="request-btn" 
+                                data-skill-id="${skill.id}" 
+                                data-skill-name="${skill.name}">
+                            <i class="fa-light fa-dice-d20"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            html.find('.e9l-skill-list').html(skillsHtml);
+        } else {
+            html.find('.e9l-skill-list').html(`
+                <div class="e9l-no-skills">
+                    <i class="fas fa-info-circle"></i>
+                    <p>${game.i18n.localize("E9L.info.noSkillsSelected")}</p>
+                </div>
+            `);
+        }
+        
+        this._attachModifierListeners(html);
+        this._attachRequestListeners(html);
+    }
+    
+    /**
+     * Modifier-Listener mit Cleanup
      */
     _attachModifierListeners(html) {
-        html.find('.modifier-value').each((i, el) => {
+        const elements = html.find('.modifier-value');
+        
+        elements.each((i, el) => {
             const skillId = el.dataset.skillId;
             
-            // Alte Handler entfernen falls vorhanden
+            // Cleanup alte Handler
             this._removeModifierListeners(el);
             
-            // Wheel Handler
             const wheelHandler = (e) => {
                 e.preventDefault();
                 const delta = e.deltaY > 0 ? -1 : 1;
-                this._updateModifier(skillId, delta);
+                this._updateModifier(skillId, delta, el);
             };
             
-            // Key Handler
             const keyHandler = (e) => {
-                e.preventDefault();
-                if (e.key === 'ArrowUp') {
-                    this._updateModifier(skillId, 1);
-                } else if (e.key === 'ArrowDown') {
-                    this._updateModifier(skillId, -1);
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const delta = e.key === 'ArrowUp' ? 1 : -1;
+                    this._updateModifier(skillId, delta, el);
                 }
             };
             
-            // Handler speichern für späteren Cleanup
             this._wheelHandlers.set(el, wheelHandler);
             this._keyHandlers.set(el, keyHandler);
             
-            // Event Listener hinzufügen
             el.addEventListener('wheel', wheelHandler, { passive: false });
             el.addEventListener('keydown', keyHandler);
         });
@@ -223,8 +327,6 @@ export class E9LUIPanel extends Application {
     
     /**
      * Entfernt Modifier-Listener
-     * @private
-     * @param {HTMLElement} el - DOM Element
      */
     _removeModifierListeners(el) {
         const wheelHandler = this._wheelHandlers.get(el);
@@ -242,152 +344,60 @@ export class E9LUIPanel extends Application {
     }
     
     /**
-     * Aktualisiert Modifier-Wert
-     * @private
-     * @param {string} skillId - Skill ID
-     * @param {number} delta - Änderungswert
+     * Update Modifier mit Throttling
      */
-    _updateModifier(skillId, delta) {
+    _updateModifier(skillId, delta, element) {
         const current = this.modifiers[skillId] || 0;
         const newValue = Math.max(-10, Math.min(10, current + delta));
-        this._setModifier(skillId, newValue);
-    }
-    
-    /**
-     * Setzt Modifier-Wert
-     * @private
-     * @param {string} skillId - Skill ID
-     * @param {number} value - Neuer Wert
-     */
-    _setModifier(skillId, value) {
-        this.modifiers[skillId] = value;
-        E9LSettings.setSkillModifiers(this.modifiers);
         
-        // UI direkt aktualisieren ohne komplettes Re-render
-        const input = this.element.find(`[data-skill-id="${skillId}"].modifier-value`);
-        if (input.length) {
-            input.val(value >= 0 ? `+${value}` : value);
+        if (current !== newValue) {
+            this.modifiers[skillId] = newValue;
+            
+            const displayValue = newValue === 0 ? '0' : (newValue > 0 ? `+${newValue}` : `${newValue}`);
+            element.value = displayValue;
+            
+            // Debounced save
+            clearTimeout(this._updateTimer);
+            this._updateTimer = setTimeout(() => {
+                E9LSettings.setSkillModifiers(this.modifiers);
+            }, 500);
         }
     }
     
     /**
-     * Setzt Position vom Button aus
-     * @param {DOMRect} buttonRect - Button Rectangle
-     */
-    setPositionFromButton(buttonRect) {
-        const panelWidth = 280;
-        // Dynamische Höhe - 80% der Viewport-Höhe, max 800px
-        const maxHeight = Math.min(window.innerHeight * 0.8, 800);
-        const panelHeight = maxHeight;
-        const offset = 10;
-        
-        // Position rechts vom Button, 20px höher
-        let left = buttonRect.right + offset;
-        let top = buttonRect.top - 20;
-        
-        // Prüfen ob Panel rechts aus dem Fenster ragt
-        if (left + panelWidth > window.innerWidth) {
-            left = buttonRect.left - panelWidth - offset;
-        }
-        
-        // Prüfen ob Panel unten aus dem Fenster ragt
-        if (top + panelHeight > window.innerHeight) {
-            top = Math.max(10, window.innerHeight - panelHeight - 10);
-        }
-        
-        // Setze auch die max-height für die Listen
-        const listHeight = panelHeight - 50; // 50px für Tabs
-        
-        this.element.css({
-            position: 'fixed',
-            left: `${left}px`,
-            top: `${top}px`,
-            bottom: 'auto',
-            right: 'auto',
-            'z-index': 100
-        });
-        
-        // Dynamisch Listen-Höhe anpassen
-        this.element.find('.e9l-skill-list, .e9l-config-section').css({
-            'max-height': `${listHeight}px`
-        });
-    }
-    
-    /**
-     * Setzt initiale Position
-     * @private
-     */
-    _setPosition() {
-        // Nutze die gleiche dynamische Höhe wie in setPositionFromButton
-        const maxHeight = Math.min(window.innerHeight * 0.8, 800);
-        const listHeight = maxHeight - 50;
-        
-        const position = {
-            left: 80,
-            top: 100
-        };
-        
-        this.element.css({
-            position: 'fixed',
-            left: `${position.left}px`,
-            top: `${position.top}px`,
-            bottom: 'auto',
-            right: 'auto',
-            'z-index': 100
-        });
-        
-        // Setze auch hier die dynamische Listen-Höhe
-        this.element.find('.e9l-skill-list, .e9l-config-section').css({
-            'max-height': `${listHeight}px`
-        });
-    }
-    
-    /**
-     * Override _renderOuter for custom DOM handling
-     * @private
-     */
-    async _renderOuter() {
-        // Create container div
-        const element = $('<div>')
-            .attr('id', this.id)
-            .addClass('app window-app e9l-ui-panel')
-            .css({
-                position: 'fixed',
-                'z-index': 100
-            });
-        
-        // Load and render template
-        const html = await renderTemplate(this.template, await this.getData());
-        element.html(html);
-        
-        // Add to body
-        $('body').append(element);
-        
-        console.log('E9L: Panel DOM hinzugefügt');
-        
-        return element;
-    }
-    
-    /**
-     * Fügt Request-Button Listener hinzu
-     * @private
-     * @param {jQuery} html - jQuery HTML Element
+     * Request-Button Listener
      */
     _attachRequestListeners(html) {
-        html.find('.request-btn').off('click').on('click', (e) => {
+        html.find('.request-btn').off('click');
+        
+        html.find('.request-btn').on('click', (e) => {
+            e.preventDefault();
             const skillId = e.currentTarget.dataset.skillId;
             const skillName = e.currentTarget.dataset.skillName;
             const modifier = this.modifiers[skillId] || 0;
             
             E9LChatHandler.sendSkillRequest(skillName, modifier);
+            
+            // Sound komplett entfernt
         });
     }
     
     /**
      * Cleanup beim Schließen
-     * @param {Object} options - Close options
      */
     async close(options = {}) {
+        // Entferne Click-Outside Handler
+        if (this._clickOutsideHandler) {
+            document.removeEventListener('click', this._clickOutsideHandler);
+            this._clickOutsideHandler = null;
+        }
+        
+        // Timer aufräumen
+        if (this._updateTimer) {
+            clearTimeout(this._updateTimer);
+            this._updateTimer = null;
+        }
+        
         // Event Listener aufräumen
         if (this.element) {
             this.element.find('.modifier-value').each((i, el) => {
@@ -395,7 +405,11 @@ export class E9LUIPanel extends Application {
             });
         }
         
-        // Normal schließen (zerstört das Panel)
+        // Informiere main.js dass Panel geschlossen wurde
+        if (window.E9LRequestCheck) {
+            window.E9LRequestCheck.panel = null;
+        }
+        
         return super.close(options);
     }
 }

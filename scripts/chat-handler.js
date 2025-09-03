@@ -1,5 +1,5 @@
 /**
- * Chat Handler für E9L Request Probe
+ * Chat Handler für E9L Request Check
  * @class
  */
 export class E9LChatHandler {
@@ -23,7 +23,7 @@ export class E9LChatHandler {
     static sendSkillRequest(skillName, modifier) {
         // Input-Validierung
         if (!this._validateInput(skillName, modifier)) {
-            ui.notifications.error('Ungültige Eingabe für Skill-Request');
+            ui.notifications.error(game.i18n.localize('E9L.errors.invalidInput'));
             return;
         }
         
@@ -34,27 +34,31 @@ export class E9LChatHandler {
         
         // Modifier Format - immer anzeigen, auch bei 0
         const modifierText = modifier >= 0 ? `+${modifier}` : `${modifier}`;
-        const skillText = `${sanitizedSkillName} ${modifierText}`;
         
-        // Chat Nachricht erstellen - Standard Foundry Styling
+        // Erstelle das Makro-Text
+        const macroText = `${sanitizedSkillName} ${modifierText}`;
+        
+        // Chat Nachricht erstellen - OHNE TextEditor.enrichHTML das ein Promise zurückgibt
         const messageContent = `
-            <h3><i class="fa-light fa-dice-d20"></i> ${game.i18n.localize('E9L.chat.requestTitle')}</h3>
-            <p class="dice-formula">@Rq[${skillText}]</p>
+            <div class="e9l-skill-request">
+                <h3><i class="fa-light fa-dice-d20"></i> ${game.i18n.localize('E9L.chat.requestTitle')}</h3>
+                <p class="dice-formula">@Rq[${macroText}]</p>
+            </div>
         `;
         
-        // Chat Message mit Fehlerbehandlung
+        // Chat Message mit Foundry v12 APIs
         try {
             ChatMessage.create({
                 user: game.user.id,
                 content: messageContent,
-                style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+                // KEIN type field - das verursacht die rote Umrandung
                 speaker: ChatMessage.getSpeaker({
                     actor: null,
                     token: null,
                     alias: game.user.name || "GM"
                 }),
                 flags: {
-                    "e9l-request-probe": {
+                    "e9l-request-check": {
                         skill: sanitizedSkillName,
                         modifier: modifier,
                         timestamp: Date.now()
@@ -66,7 +70,7 @@ export class E9LChatHandler {
             
         } catch (error) {
             console.error('E9L Chat: Fehler beim Senden der Nachricht', error);
-            ui.notifications.error('Fehler beim Senden der Probe-Anforderung');
+            ui.notifications.error(game.i18n.localize('E9L.errors.sendError'));
         }
     }
     
@@ -83,7 +87,8 @@ export class E9LChatHandler {
             return false;
         }
         
-        if (skillName.length > 100) { // Max Länge
+        // Max Länge prüfen
+        if (skillName.length > 100) {
             return false;
         }
         
@@ -114,8 +119,14 @@ export class E9LChatHandler {
      */
     static sendMultipleRequests(skillRequests) {
         if (!Array.isArray(skillRequests) || skillRequests.length === 0) {
-            ui.notifications.warn('Keine Skills ausgewählt');
+            ui.notifications.warn(game.i18n.localize('E9L.errors.noSkillsSelected'));
             return;
+        }
+        
+        // Maximal 10 Skills auf einmal
+        if (skillRequests.length > 10) {
+            ui.notifications.warn('Maximal 10 Proben gleichzeitig möglich');
+            skillRequests = skillRequests.slice(0, 10);
         }
         
         const validRequests = skillRequests.filter(req => 
@@ -123,7 +134,7 @@ export class E9LChatHandler {
         );
         
         if (validRequests.length === 0) {
-            ui.notifications.error('Keine gültigen Skill-Requests');
+            ui.notifications.error(game.i18n.localize('E9L.errors.invalidInput'));
             return;
         }
         
@@ -131,30 +142,35 @@ export class E9LChatHandler {
         const requestList = validRequests.map(req => {
             const mod = parseInt(req.modifier) || 0;
             const modText = mod >= 0 ? `+${mod}` : `${mod}`;
+            const sanitizedName = this._sanitizeForHTML(req.skillName);
             return mod !== 0 ? 
-                `${this._sanitizeForHTML(req.skillName)} ${modText}` : 
-                this._sanitizeForHTML(req.skillName);
+                `${sanitizedName} ${modText}` : 
+                sanitizedName;
         });
         
+        // Erstelle Listen-HTML
+        const listItems = requestList.map(skill => 
+            `<li class="dice-formula">@Rq[${skill}]</li>`
+        ).join('');
+        
         const messageContent = `
-            <h3><i class="fa-light fa-dice-d20"></i> ${game.i18n.localize('E9L.chat.multipleRequestTitle') || 'Mehrere Proben angefordert'}</h3>
-            <ul>
-                ${requestList.map(skill => `<li class="dice-formula">@Rq[${skill}]</li>`).join('')}
-            </ul>
+            <div class="e9l-skill-request">
+                <h3><i class="fa-light fa-dice-d20"></i> ${game.i18n.localize('E9L.chat.multipleRequestTitle')}</h3>
+                <ul>${listItems}</ul>
+            </div>
         `;
         
         try {
             ChatMessage.create({
                 user: game.user.id,
                 content: messageContent,
-                style: CONST.CHAT_MESSAGE_STYLES.OTHER,
                 speaker: ChatMessage.getSpeaker({
                     actor: null,
                     token: null,
                     alias: game.user.name || "GM"
                 }),
                 flags: {
-                    "e9l-request-probe": {
+                    "e9l-request-check": {
                         multiple: true,
                         requests: validRequests,
                         timestamp: Date.now()
@@ -166,7 +182,7 @@ export class E9LChatHandler {
             
         } catch (error) {
             console.error('E9L Chat: Fehler beim Senden mehrerer Nachrichten', error);
-            ui.notifications.error('Fehler beim Senden der Proben-Anforderungen');
+            ui.notifications.error(game.i18n.localize('E9L.errors.sendError'));
         }
     }
 }
